@@ -1,0 +1,20 @@
+[Unit]
+Description=Show custom kiosk logo during boot
+DefaultDependencies=no
+After=systemd-user-sessions.service
+Before=lightdm.service display-manager.service
+Conflicts=getty@tty1.service
+
+[Service]
+Type=simple
+ExecStart=/bin/sh -c 'LOGO="/opt/kiosk/logo.png"; [ -f "$LOGO" ] || LOGO="/opt/kiosk/logo.ppm"; exec /usr/bin/fbi -T 1 --noverbose --autozoom "$LOGO"'
+StandardInput=tty
+StandardOutput=tty
+TTYPath=/dev/tty1
+TTYReset=yes
+TTYVHangup=yes
+TTYVTDisallocate=yes
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=graphical.target
